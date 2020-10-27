@@ -144,7 +144,7 @@ class GameOfLife:
     # update the instances
     def update_generation(self):
         '''
-        Inspect the current generation statem prepare the next generation
+        Inspect the current generation state prepare the next generation
         '''
         self.set_grid(0, self.inactive_grid())
         
@@ -199,6 +199,10 @@ class GameOfLife:
             
     # game loop
     def run_game(self):
+        print('Press "s" to pause/resume the game.')
+        print('Press "r" to randomize the cells')
+        print('Press "c" to clear the grid')
+        print('Press "q" to quit the game')
         while True:
             if self.game_over:
                 return
