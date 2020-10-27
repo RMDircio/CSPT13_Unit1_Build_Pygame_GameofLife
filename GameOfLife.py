@@ -175,6 +175,12 @@ class GameOfLife:
                         self.paused = False
                     else:
                         self.paused = True
+
+                if event.unicode == 'c':
+                    print('Clear grid.')
+                    
+              
+                
                 # if 'r' key is pressed --> randomize gride
                 elif event.unicode == 'r':
                     print("Randomizing grid.")
