@@ -29,30 +29,31 @@ class GameOfLife:
         self.clear_screen()
         # push drawing to memory with flip
         pygame.display.flip()
-        
-        self.last_update_completed = 0
+        # frame rate
         self.desired_milliseconds_between_updates = (1.0 / max_fps) * 1000.0
+        # game features
+        self.paused = False
+        self.game_over = False
         
+        # grid
+        self.last_update_completed = 0
         self.game_grid_active = 0
         self.num_of_columns = int(width / cell_size)
         self.num_of_rows = int(height / cell_size)
         self.grids = []
         self.init_grids()
         self.set_grid()
-        self.paused = False
-        self.game_over = False
 
     def init_grids(self):
         
         # set up game grid
-
         def create_grid():
             rows = []
             for num_of_rows in range(self.num_of_rows):
                 list_of_columns = [0] * self.num_of_columns
                 rows.append(list_of_columns)
             return rows
-        
+        # two grids - active and inactive
         self.grids.append(create_grid())
         self.grids.append(create_grid())
         
@@ -75,9 +76,7 @@ class GameOfLife:
     def draw_grid(self):
         # clear screen first
         self.clear_screen()
-        # draw circles on grid
-        #(surface, color, center(x,y), radius, width)
-        # circle = pygame.draw.circle(self.screen, alive_coral, (50,50), 5, 0) 
+        # draw circles on grid 
         for c in range(self.num_of_columns):
             for r in range(self.num_of_rows):
                 # set up colors
@@ -99,7 +98,6 @@ class GameOfLife:
         # default screen is dead/black
         self.screen.fill(dead_black)
     
-
     def get_cell(self,r,c):
         try:
             cell_value = self.grids[self.game_grid_active][r][c]
@@ -107,6 +105,7 @@ class GameOfLife:
             cell_value = 0
         return cell_value
 
+    # check GOL rules for each cell
     def check_cell_neighbors(self, row_index, col_index):
         # get number of alive cells around current cell
         num_alive_neighbors = 0
@@ -123,28 +122,37 @@ class GameOfLife:
         num_alive_neighbors += self.get_cell(row_index + 1, col_index + 1)
 
 
-        # Rules
+        # GOL Rules
         
-        if self.grids[self.game_grid_active][row_index][col_index] == 1: # alive
-            if num_alive_neighbors > 3: # overpopulation
+        #  default alive cell
+        if self.grids[self.game_grid_active][row_index][col_index] == 1: 
+            
+            # overpopulation if greater than 3 cells alive align
+            if num_alive_neighbors > 3: 
                 return 0
             
-            if num_alive_neighbors < 2: # underpopulation
+            # underpopulation if less than 3 cells alive align
+            if num_alive_neighbors < 2: 
                 return 0
-
+            
+            # balanced if 2 or 3 cells alive align
             if num_alive_neighbors == 2 or num_alive_neighbors == 3:
                 return 1
-        
-        elif self.grids[self.game_grid_active][row_index][col_index] == 0: # dead
-            if num_alive_neighbors == 3: #rebirth
+
+        # default dead cell
+        elif self.grids[self.game_grid_active][row_index][col_index] == 0:
+            
+            # rebirth if 3 cells alive align
+            if num_alive_neighbors == 3: 
                 return 1
         
+        # return grid
         return self.grids[self.game_grid_active][row_index][col_index]
    
     # update the instances
     def update_generation(self):
         '''
-        Inspect the current generation state prepare the next generation
+        Check the current generation state prepare the next generation
         '''
         self.set_grid(0, self.inactive_grid())
         
@@ -163,7 +171,7 @@ class GameOfLife:
         return (self.game_grid_active + 1) % 2
         
 
-    
+    # key presses
     def handle_events(self):
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
@@ -199,6 +207,7 @@ class GameOfLife:
             
     # game loop
     def run_game(self):
+        # terminal key prompts
         print('Press "s" to pause/resume the game.')
         print('Press "r" to randomize the cells')
         print('Press "c" to clear the grid')
@@ -214,7 +223,7 @@ class GameOfLife:
             # Slow down the FrameRate
             self.cap_frame_rate()
 
-
+    # frame rate issues
     def cap_frame_rate(self):
         now = pygame.time.get_ticks()
         milliseconds_since_last_update = now - self.last_update_completed
@@ -223,7 +232,6 @@ class GameOfLife:
         if time_to_sleep > 0:
             pygame.time.delay(int(time_to_sleep))
         self.last_update_completed = now
-
 
 
 if __name__ == "__main__":
