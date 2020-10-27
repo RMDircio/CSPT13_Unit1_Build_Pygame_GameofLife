@@ -170,16 +170,18 @@ class GameOfLife:
                 print("key pressed")
                 # if 's' key is pressed --> toggle game pause
                 if event.unicode == 's':
-                    print("Toggling pause.")
+                    print("Paused.")
                     if self.paused:
                         self.paused = False
+                        print('Resume')
                     else:
                         self.paused = True
 
                 if event.unicode == 'c':
-                    print('Clear grid.')
-                    
-              
+                    print("Clear grid - Press 'r' to randomize and then 's' to resume.")
+                    self.paused = True
+                    self.set_grid(0, 0)
+                    self.draw_grid()
                 
                 # if 'r' key is pressed --> randomize gride
                 elif event.unicode == 'r':
